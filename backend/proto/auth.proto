@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package auth;
+
+service UsersService {
+  rpc CreateUser (CreateUserDto) returns (User) {};
+  rpc FindAllUsers (FindAllUsersDto) returns (FindAllUsersResponse) {};
+  rpc FindOneUser (UserId) returns (User) {};
+  rpc FindOneUserByEmail (FindOneUserByEmailDto) returns (User) {};
+  rpc UpdateUser (UpdateUserDto) returns (User) {};
+  rpc RemoveUser (UserId) returns (Message) {};
+  // rpc QueryUsers (stream PaginationDto) returns (stream Users) {};
+}
+
+// message PaginationDto {
+//   int32 page = 1;
+//   int32 limit = 2;
+// }
+
+message FindAllUsersResponse {
+  Users data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message Message {
+  string message = 1;
+}
+
+message Empty {
+  // Empty message
+}
+
+message Users {
+  repeated User users = 1;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message FindOneUserByEmailDto {
+  string email = 1;
+}
+
+message UpdateUserDto {
+  string id = 1;
+  optional string address = 2;
+  optional string location = 3;
+  optional SocialMedia socialMedia = 4;
+  optional string gymId = 5;
+  optional string gymLocationId = 6;
+  optional string role = 7;
+}
+
+message CreateUserDto {
+  string lastName = 1;
+  string firstName = 2;
+  string dateOfBirth = 3;
+  string email = 4;
+  string location = 5;
+  string address = 6;
+  string provider = 7;
+  optional string password = 8;
+  optional string gymId = 9;
+  optional string gymLocationId = 10;
+  string role = 11;
+}
+
+message FindAllUsersDto {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  optional string search = 4;
+  optional FilterUsersDto filter = 5;
+}
+
+message FilterUsersDto {
+  optional string location = 1;
+  optional bool isActive = 2;
+  optional bool isSubscribed = 3;
+  optional bool isDeleted = 4;
+  optional string role = 5;
+}
+
+message User {
+  string id = 1;
+  string lastName = 2;
+  string firstName = 3;
+  string dateOfBirth = 4;
+  string email = 5;
+  string location = 6;
+  string address = 7;
+  string provider = 8;
+  optional string password = 9;
+  string role = 10;
+  bool isActive = 11;
+  bool isSubscribed = 12;
+  bool isDeleted = 13;
+  optional SocialMedia socialMedia = 14;
+  string gymId = 15;
+  string gymLocationId = 16;
+  string createdAt = 17;
+  string updatedAt = 18;
+}
+
+message SocialMedia {
+  optional string facebookUsername = 1;
+  optional string twitterUri = 2;
+  optional string instagramUri = 3;
+  optional string tiktokUri = 4;
+}

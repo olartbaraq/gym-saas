@@ -1,0 +1,12 @@
+// Winston logger with structured logging
+logger.info('Operation completed', {
+    tag: 'ServiceName',
+    userId: context.userId,
+    data: result
+});
+
+logger.error('Operation failed', {
+    tag: 'ServiceName',
+    error: error.message,
+    stack: error.stack
+});
