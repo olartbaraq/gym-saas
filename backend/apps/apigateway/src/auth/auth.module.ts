@@ -20,6 +20,7 @@ import { UsersModule } from '../users/users.module';
         signOptions: { expiresIn: configService.get<number>('JWT_EXPIRES_IN') },
       }),
       inject: [ConfigService],
+      global: true, // Make JwtModule global so JwtAuthGuard can access JwtService
     }),
     UsersModule,
   ],

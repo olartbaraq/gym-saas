@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { UsersResolver } from './users.resolver';
+import { UsersGraphQLService } from './users-graphql.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_PACKAGE_NAME } from '@app/common';
 import { join } from 'path';
@@ -19,8 +19,7 @@ import { join } from 'path';
       },
     ]),
   ],
-  controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService],
+  providers: [UsersResolver, UsersGraphQLService],
+  exports: [UsersGraphQLService],
 })
-export class UsersModule {}
+export class UsersGraphQLModule {}

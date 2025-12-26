@@ -36,8 +36,8 @@ revert:
 	@yarn migration:revert
 
 # Fix the migration file and run again
-run:
-	@yarn migration:run
+run_migration:
+	@yarn migration_${name}:run
 
 build:
 	@yarn build

@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package gyms;
+
+service GymsService {
+  rpc CreateGym (CreateGymDto) returns (Gym) {};
+  rpc FindAllGyms (FindAllGymsDto) returns (FindAllGymsResponse) {};
+  rpc FindOneGym (GymId) returns (Gym) {};
+  rpc UpdateGym (UpdateGymDto) returns (Gym) {};
+  rpc RemoveGym (RemoveGymDto) returns (Message) {};
+}
+
+message CreateGymDto {
+  string name = 1;
+  string slug = 2;
+  optional GymConfig config = 3;
+}
+message GymConfig {
+  optional string logoUrl = 1;
+  optional string email = 2;
+  optional string phoneNumber = 3;
+  optional string websiteUrl = 4;
+  optional string policies = 5;
+}
+
+message FindAllGymsDto {
+  int32 page = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  optional string search = 4;
+  optional FilterGymsDto filter = 5;
+}
+
+message FilterGymsDto {
+  optional string name = 1;
+}
+
+message FindAllGymsResponse {
+  Gyms data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message Gyms {
+  repeated Gym gyms = 1;
+}
+
+message Gym {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  GymConfig config = 4;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message GymId {
+  string id = 1;
+}
+
+message UpdateGymDto {
+  string id = 1;
+  optional string name = 2;
+  optional string slug = 3;
+  optional GymConfig config = 4;
+}
+
+message RemoveGymDto {
+  string id = 1;
+}
+
+message Message {
+  string message = 1;
+}

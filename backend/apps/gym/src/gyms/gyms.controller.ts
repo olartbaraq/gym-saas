@@ -1,35 +1,63 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { GymsService } from './gyms.service';
-import { CreateGymDto } from './dto/create-gym.dto';
-import { UpdateGymDto } from './dto/update-gym.dto';
+import {
+  CreateGymDto,
+  UpdateGymDto,
+  GymsServiceController,
+  GymId,
+  GymsServiceControllerMethods,
+  FindAllGymsDto,
+  RemoveGymDto,
+  handleError,
+} from '@app/common';
 
 @Controller()
-export class GymsController {
+@GymsServiceControllerMethods()
+export class GymsController implements GymsServiceController {
   constructor(private readonly gymsService: GymsService) {}
 
-  @MessagePattern('createGym')
-  create(@Payload() createGymDto: CreateGymDto) {
-    return this.gymsService.create(createGymDto);
+  async createGym(createGymDto: CreateGymDto) {
+    try {
+      return await this.gymsService.create(createGymDto);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
-  @MessagePattern('findAllGyms')
-  findAll() {
-    return this.gymsService.findAll();
+  async findAllGyms(findAllGymsDto: FindAllGymsDto) {
+    try {
+      return await this.gymsService.findAll(findAllGymsDto);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
-  @MessagePattern('findOneGym')
-  findOne(@Payload() id: number) {
-    return this.gymsService.findOne(id);
+  async findOneGym(gymId: GymId) {
+    try {
+      return await this.gymsService.findOne(gymId.id);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
-  @MessagePattern('updateGym')
-  update(@Payload() updateGymDto: UpdateGymDto) {
-    return this.gymsService.update(updateGymDto.id, updateGymDto);
+  async updateGym(updateGymDto: UpdateGymDto) {
+    try {
+      return await this.gymsService.update(updateGymDto.id, updateGymDto);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
-  @MessagePattern('removeGym')
-  remove(@Payload() id: number) {
-    return this.gymsService.remove(id);
+  async removeGym(removeGymDto: RemoveGymDto) {
+    try {
+      return await this.gymsService.remove(removeGymDto.id);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 }
