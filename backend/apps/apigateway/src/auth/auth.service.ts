@@ -45,7 +45,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (user.provider !== 'local') {
+    if (user.provider !== AuthProvider.LOCAL) {
       throw new UnauthorizedException('User cannot login with this method');
     }
 
@@ -82,7 +82,7 @@ export class AuthService {
         address: '',
         role: UserRole.MEMBER,
       };
-      user = await firstValueFrom(this.usersService.create(newUser));
+      user = await this.usersService.create(newUser);
     }
     if (isNewUser) {
       // probably send an email to the new user created because isNewUser is now true globally

@@ -5,14 +5,11 @@ import {
   CreateUserDto,
   UpdateUserDto,
   UsersServiceControllerMethods,
-  User,
   UserId,
   FindAllUsersDto,
-  Users,
-  Message,
-  FindAllUsersResponse,
   FindOneUserByEmailDto,
 } from '@app/common';
+import { handleError } from '@app/common';
 
 @Controller()
 @UsersServiceControllerMethods()
@@ -20,28 +17,60 @@ export class UsersController implements UsersServiceController {
   constructor(private readonly usersService: UsersService) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
   async findAllUsers(findAllUsersDto: FindAllUsersDto) {
-    const { data, total, page, limit } =
-      await this.usersService.findAll(findAllUsersDto);
-    return { data, total, page, limit };
+    try {
+      const { data, total, page, limit } =
+        await this.usersService.findAll(findAllUsersDto);
+      return { data, total, page, limit };
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
   async findOneUser(user: UserId) {
-    return await this.usersService.findOne(user.id);
+    try {
+      return await this.usersService.findOne(user.id);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
   async findOneUserByEmail(findOneUserByEmailDto: FindOneUserByEmailDto) {
-    return await this.usersService.findOneByEmail(findOneUserByEmailDto.email);
+    try {
+      return await this.usersService.findOneByEmail(
+        findOneUserByEmailDto.email,
+      );
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
   async updateUser(updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(updateUserDto.id, updateUserDto);
+    try {
+      return await this.usersService.update(updateUserDto.id, updateUserDto);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 
   async removeUser(user: UserId) {
-    return await this.usersService.remove(user.id);
+    try {
+      return await this.usersService.remove(user.id);
+    } catch (error) {
+      handleError(error);
+      throw null;
+    }
   }
 }

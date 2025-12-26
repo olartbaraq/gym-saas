@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -9,6 +10,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -16,6 +18,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { Public } from './decorators/public.decorator';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { LoginDto } from '../users/dto/login.dto';
+import { UsersService } from '../users/users.service';
 
 // Extend Express Request to include cookies
 interface RequestWithCookies extends Request {
@@ -37,6 +42,7 @@ export class AuthController {
   private readonly logger: LoggerService = new Logger(AuthController.name);
   constructor(
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -68,6 +74,52 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
     });
+  }
+
+  @Post('login')
+  @Public()
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully logged in',
+    schema: {
+      properties: {
+        access_token: { type: 'string' },
+        user: {
+          type: 'object',
+          properties: {
+            email: { type: 'string' },
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            role: { type: 'string' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
+  async login(@Body() loginDto: LoginDto) {
+    this.logger.log('Login attempt', {
+      tag: 'Login',
+      loginDto,
+    });
+    // const user = await this.usersService.findOneByEmail(
+    //   loginDto.email.toLowerCase()
+    // );
+    // if (!user || !user.isActive) {
+    //   this.logger.error('Invalid credentials or account deactivated', {
+    //     tag: 'Login',
+    //     loginDto,
+    //   });
+    //   throw new UnauthorizedException('Invalid credentials or account deactivated');
+    // }
+    const tokens = await this.authService.login(loginDto);
+    this.logger.log('Login successful', {
+      tag: 'Login',
+      loginDto,
+      tokens,
+    });
+    return tokens;
   }
 
   @Get('google')
