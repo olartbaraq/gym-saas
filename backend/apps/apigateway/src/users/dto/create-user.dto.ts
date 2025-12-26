@@ -63,4 +63,22 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'Password is required' })
   password: string;
+
+  @ApiProperty({
+    example: 'gym123',
+    description: 'Gym ID',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'Gym ID is required' })
+  gymId: string;
+
+  @ApiProperty({
+    example: 'gym123',
+    description: 'Gym Location ID',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'Gym Location ID is required' })
+  gymLocationId: string;
 }
