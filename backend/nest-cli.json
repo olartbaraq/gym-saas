@@ -52,6 +52,17 @@
         "assets": ["proto/*.proto"],
         "watchAssets": true
       }
+    },
+    "members": {
+      "type": "application",
+      "root": "apps/members",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/members/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true
+      }
     }
   }
 }

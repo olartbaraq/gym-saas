@@ -1,4 +1,6 @@
 import { DataSource } from 'typeorm';
+import { join } from 'path';
+import { Gym } from '../gyms/entities/gym.entity';
 
 export const databaseProviders = [
   {
@@ -11,8 +13,8 @@ export const databaseProviders = [
         username: process.env.GYM_DATABASE_USERNAME!,
         password: process.env.GYM_DATABASE_PASSWORD!,
         database: process.env.GYM_DATABASE_NAME!,
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        entities: [Gym],
+        migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
         synchronize: false, // Use migrations instead of synchronize
         logging: true,
         ssl: { rejectUnauthorized: false },
@@ -22,3 +24,4 @@ export const databaseProviders = [
     },
   },
 ];
+

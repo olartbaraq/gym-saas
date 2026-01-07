@@ -1,4 +1,4 @@
-import { RolePermission } from '../auth/decorators/role.types';
+import { RolePermission } from '../restapi/auth/decorators/role.types';
 import { UserRole } from 'apps/auth/src/users/entities/user.entity';
 
 export const ROLE_PERMISSIONS = new Map<UserRole, RolePermission[]>([

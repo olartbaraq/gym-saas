@@ -1,20 +1,18 @@
 import { config } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as passport from 'passport';
+import { GraphQLAwareValidationPipe } from './common/pipes/graphql-aware-validation.pipe';
 
 // Load environment variables from .env file
 config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Security headers
   app.use(helmet());
 
   // Cookie parser for handling HTTP-only cookies
@@ -52,26 +50,43 @@ async function bootstrap() {
     },
   });
 
-  app.setGlobalPrefix('api/v1');
-
-  // CORS configuration
-  app.enableCors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+  // Set global prefix but exclude GraphQL endpoint
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['/graphql'],
   });
 
-  // Global validation pipe
+  // CORS configuration - allow GraphQL Playground
+  app.enableCors({
+    origin: (origin, callback) => {
+      // Allow GraphQL Playground and configured origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Allow all in development, restrict in production
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  });
+
+  // Global validation pipe - skips GraphQL (GraphQL has its own validation)
   app.useGlobalPipes(
-    new ValidationPipe({
+    new GraphQLAwareValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      skipMissingProperties: false,
+      // Skip validation for GraphQL endpoints
+      skipNullProperties: false,
+      skipUndefinedProperties: false,
     }),
   );
 
   await app.listen(process.env.GATEWAY_PORT!);
   Logger.log(`API Gateway is running on port ${process.env.GATEWAY_PORT!}`);
+  Logger.log(
+    `Use Apollo Studio Sandbox: https://studio.apollographql.com/sandbox?endpoint=http://localhost:${process.env.GATEWAY_PORT}/graphql`,
+  );
 }
 bootstrap();

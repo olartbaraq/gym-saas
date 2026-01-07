@@ -10,6 +10,7 @@ import { AUTH_PACKAGE_NAME } from '@app/common';
 config();
 
 async function bootstrap() {
+  const authGrpcPort = process.env.AUTH_GRPC_PORT || '5000';
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthModule,
     {
@@ -17,10 +18,11 @@ async function bootstrap() {
       options: {
         protoPath: join(__dirname, '../auth.proto'),
         package: AUTH_PACKAGE_NAME,
+        url: `0.0.0.0:${authGrpcPort}`,
       },
     },
   );
   await app.listen();
-  Logger.log(`Auth service started successfully`);
+  Logger.log(`Auth gRPC service started on port ${authGrpcPort}`);
 }
 bootstrap();

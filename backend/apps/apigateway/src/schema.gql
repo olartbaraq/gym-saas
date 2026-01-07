@@ -1,0 +1,156 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateGymInput {
+  config: GymConfigInput
+  name: String!
+  slug: String!
+}
+
+input FilterGymsInput {
+  name: String
+}
+
+input FilterUsersInput {
+  isActive: Boolean
+  isDeleted: Boolean
+  isSubscribed: Boolean
+  location: String
+  role: String
+}
+
+input FindAllGymsInput {
+  filter: FilterGymsInput
+  limit: Int = 50
+  offset: Int
+  page: Int = 1
+  search: String
+}
+
+type FindAllGymsResponse {
+  data: Gyms!
+  limit: Int!
+  page: Int!
+  total: Int!
+}
+
+input FindAllUsersInput {
+  filter: FilterUsersInput
+  limit: Int = 50
+  offset: Int
+  page: Int = 1
+  search: String
+}
+
+type FindAllUsersResponse {
+  data: Users!
+  limit: Int!
+  page: Int!
+  total: Int!
+}
+
+type Gym {
+  config: GymConfig
+  createdAt: String!
+  id: ID!
+  name: String!
+  slug: String!
+  updatedAt: String!
+}
+
+type GymConfig {
+  email: String
+  logoUrl: String
+  phoneNumber: String
+  policies: String
+  websiteUrl: String
+}
+
+input GymConfigInput {
+  email: String
+  logoUrl: String
+  phoneNumber: String
+  policies: String
+  websiteUrl: String
+}
+
+type Gyms {
+  gyms: [Gym!]!
+}
+
+type Message {
+  message: String!
+}
+
+type Mutation {
+  createGym(input: CreateGymInput!): Gym!
+  removeGym(id: String!): Message!
+  removeUser(id: String!): Message!
+  updateGym(input: UpdateGymInput!): Gym!
+  updateUser(input: UpdateUserInput!): User!
+}
+
+type Query {
+  findAllGyms(input: FindAllGymsInput): FindAllGymsResponse!
+  findAllUsers(input: FindAllUsersInput): FindAllUsersResponse!
+  findOneGym(id: String!): Gym!
+  findOneUser(id: String!): User!
+  findOneUserByEmail(email: String!): User!
+}
+
+type SocialMedia {
+  facebookUsername: String
+  instagramUri: String
+  tiktokUri: String
+  twitterUri: String
+}
+
+input SocialMediaInput {
+  facebookUsername: String
+  instagramUri: String
+  tiktokUri: String
+  twitterUri: String
+}
+
+input UpdateGymInput {
+  config: GymConfigInput
+  id: ID!
+  name: String
+  slug: String
+}
+
+input UpdateUserInput {
+  address: String
+  gymId: String
+  gymLocationId: String
+  id: ID!
+  location: String
+  role: String
+  socialMedia: SocialMediaInput
+}
+
+type User {
+  address: String!
+  createdAt: String!
+  dateOfBirth: String!
+  email: String!
+  firstName: String!
+  gymId: String!
+  gymLocationId: String!
+  id: ID!
+  isActive: Boolean!
+  isDeleted: Boolean!
+  isSubscribed: Boolean!
+  lastName: String!
+  location: String!
+  password: String
+  provider: String!
+  role: String!
+  socialMedia: SocialMedia
+  updatedAt: String!
+}
+
+type Users {
+  users: [User!]!
+}

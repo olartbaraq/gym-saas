@@ -19,7 +19,6 @@ import { AuthProvider } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [];
   private readonly logger = new Logger(UsersService.name);
 
   constructor(
