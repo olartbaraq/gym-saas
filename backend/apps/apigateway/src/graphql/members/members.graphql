@@ -1,0 +1,24 @@
+type Member {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateMemberInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateMemberInput {
+  id: Int!
+}
+
+type Query {
+  members: [Member]!
+  member(id: Int!): Member
+}
+
+type Mutation {
+  createMember(createMemberInput: CreateMemberInput!): Member!
+  updateMember(updateMemberInput: UpdateMemberInput!): Member!
+  removeMember(id: Int!): Member
+}

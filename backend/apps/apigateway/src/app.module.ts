@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './restapi/users/users.module';
 import configuration from 'apps/auth/src/config/configuration';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './restapi/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';

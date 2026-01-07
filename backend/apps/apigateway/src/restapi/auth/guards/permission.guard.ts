@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
-import { ROLE_PERMISSIONS } from '../../constants/role.permission';
+import { ROLE_PERMISSIONS } from 'apps/apigateway/src/constants/role.permission';
 import { RolePermission } from '../decorators/role.types';
 
 @Injectable()
