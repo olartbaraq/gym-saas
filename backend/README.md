@@ -1,98 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Gym-SaaS Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive backend solution for the Gym-SaaS platform, built with **NestJS**. This system is designed as a scalable microservices architecture to manage gym operations, memberships, workouts, and more.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Project Overview
 
-## Description
+Gym-SaaS is a multi-tenant platform designed to streamline gym operations. The backend handles complex logic for multi-location gym chains, role-based access control (RBAC), and member engagement.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Architecture
 
-## Project setup
+The project follows a **Microservices Architecture** using a Monorepo structure managed by NestJS.
+
+*   **API Gateway**: The single entry point for all client requests. It aggregates data and routes requests to appropriate microservices.
+*   **Auth Service**: Manages user identities, authentication (JWT, OAuth), and authorization.
+*   **Gym Service**: Handles gym-specific logic, locations, and resources.
+
+## 🛠 Tech Stack
+
+*   **Framework**: [NestJS](https://nestjs.com/) (Node.js)
+*   **Languages**: TypeScript
+*   **Databases**: PostgreSQL (managed via TypeORM and Sequelize)
+*   **Communication**: gRPC, GraphQL, REST API
+*   **Documentation**: Swagger (OpenAPI), GraphQL Playground
+
+## 📡 Communication Protocols
+
+The backend utilizes a hybrid approach to communication to leverage the best tools for specific scenarios:
+
+### 1. REST API
+Standard RESTful endpoints are exposed via the **API Gateway** for general client operations.
+*   **Base URL**: `/api/v1`
+*   **Documentation**: Interactive Swagger documentation is available at `/api` when running the server.
+*   **Use Case**: Authentication, standard CRUD operations where simple caching and HTTP semantics are beneficial.
+
+### 2. GraphQL
+A flexible data query layer is provided for complex data fetching requirements.
+*   **Endpoint**: `/graphql`
+*   **Playground**: Apollo Sandbox/Playground is enabled in development.
+*   **Schema**: Auto-generated code-first schema.
+*   **Use Case**: Fetching nested data (e.g., A Gym with all its Locations and associated Trainers) in a single request to avoid over-fetching or under-fetching.
+
+### 3. gRPC (Internal Communication)
+High-performance inter-service communication between the **API Gateway** and **Microservices** (Auth, Gym).
+*   **Protocol**: Protocol Buffers (protobuf)
+*   **Definition**: `.proto` files are located in `proto/`.
+*   **Error Handling**: Custom mapping strategies are implemented to translate gRPC status codes to HTTP exceptions for the client.
+*   **Use Case**: Low-latency, strongly-typed communication between the Gateway and internal services.
+
+## 📂 Project Structure
+
+```
+backend/
+├── apps/
+│   ├── apigateway/   # Main entry point (REST + GraphQL)
+│   ├── auth/         # Authentication Microservice (gRPC)
+│   └── gym/          # Gym Management Microservice (gRPC)
+├── libs/             # Shared libraries (DTOs, decorators, filters)
+├── proto/            # gRPC Protocol Buffer definitions
+└── ...
+```
+
+## 🚦 Getting Started
+
+### Prerequisites
+*   Node.js (v18+)
+*   Yarn
+*   PostgreSQL
+
+### Installation
 
 ```bash
+# Install dependencies
 $ yarn install
 ```
 
-## Compile and run the project
+### Running the Application
+
+Since this is a monorepo, you can run apps individually or concurrently.
 
 ```bash
-# development
-$ yarn run start
+# Run API Gateway (Development)
+$ yarn start:dev apigateway
 
-# watch mode
-$ yarn run start:dev
+# Run Auth Service
+$ yarn start:dev auth
 
-# production mode
-$ yarn run start:prod
+# Run Gym Service
+$ yarn start:dev gym
 ```
 
-## Run tests
+### Database Migrations
 
 ```bash
-# unit tests
-$ yarn run test
+# Run migrations for Auth service
+$ yarn migration_auth:run
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+# Run migrations for Gym service
+$ yarn migration_gym:run
 ```
 
-## Deployment
+## 🔐 Environment Variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Create a `.env` file in the root of `backend/` based on the `.env.example` (if available) or ensure the following configurations are set:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+*   **Database Credentials** (Host, Port, User, Password, DB Name)
+*   **JWT Secret**
+*   **Google OAuth Credentials**
+*   **Service Ports** (Gateway, gRPC ports)
+
+## 🧪 Testing
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Unit tests
+$ yarn test
+
+# E2E tests
+$ yarn test:e2e
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 📄 License
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).
